@@ -18,12 +18,13 @@ x_train_data=[]
 
 #To see the images in images dir
 for root,dirs,files in os.walk(image_dir):
-    # print(root,dirs,files)
+    print(root,dirs,files)
     for file in files:
+        print("FILES : ",file)
         if(file.endswith('png') or file.endswith('jpg')):
             path=os.path.join(root,file)
             label=os.path.basename(root).replace(' ','_').lower()
-            # print(label)   #Assign some number to the labels
+            # print(label)   #the name of the folder w.r.t images 
             # print(path)    #verify this image ,convert in to a numpy array and turn to grayscale.
             if(label not in label_id):  #Assinging numbers to labels(LabelEncoding)
                 label_id[label]=image_id
@@ -33,7 +34,7 @@ for root,dirs,files in os.walk(image_dir):
 
             pil_image=Image.open(path).convert('L')  #Coverting into grayscale.
             #Resizing the image for better accuracy.
-            size=(500,500)
+            size=(400,533)
             final_image=pil_image.resize(size,Image.ANTIALIAS)
 
             image_array=np.array(final_image)  #Convert the gray_scale image into an array of pixels.
