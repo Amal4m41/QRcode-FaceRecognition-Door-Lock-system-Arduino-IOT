@@ -6,7 +6,7 @@ import pickle,time
 import pyttsx3   #offline lib for tts
 import serial  #for serial communication with arduino
 
-from secret_key import key
+from secret_key import key,registered_users
 
 #Establish connection with arduino
 # arduino = serial.Serial(port='COM3', baudrate=9600, timeout=.1)
@@ -31,7 +31,7 @@ def speak(text):  #fn to convert text to speech
     engine.say(text)
     engine.runAndWait() 
 
-flag=True
+flag=True  # to switch between face recognition and qr code decoding
 
 MAX_TRY=2
 tries=0  #for invalid face recognition
@@ -45,6 +45,8 @@ count_frames = total_no_face_detected = 0
 
 time_out_no_of_frames_after_qrcode=0
 
+font=cv2.FONT_HERSHEY_SIMPLEX
+clr=(255,255,255)
 cap=cv2.VideoCapture(0)
 while(True):
     ret,frame = cap.read()
@@ -71,6 +73,7 @@ while(True):
             
             if(decoded_data.lower()==key):   #Check private key
                 flag=False
+                tries=0
                 speak("Valid qr code, proceed to face recognition")
                 time_out_no_of_frames_after_qrcode=0
                 
@@ -99,16 +102,15 @@ while(True):
             # print(x,y,w,h)
             roi_gray=gray[y:y+h,x:x+w]  #roi(region of interest)
             # roi_color=frame[y:y+h,x:x+w]
+
             id,confidence=recognizer.predict(roi_gray)
-            print(id,confidence)
-            if(confidence>70):
+            print(id,confidence,labels[id])
+            if(confidence>70  and (labels[id] in registered_users)):
                 print("PREDICTED : ",labels[id])
-                font=cv2.FONT_HERSHEY_SIMPLEX
-                name=labels[id]
-                clr=(255,255,255);thickness=2
+                
+                name=labels[id] 
                 cv2.putText(frame,name.replace('_',' ').title(),(x,y-5),font,0.8,clr,1,cv2.LINE_AA)
 
-            
                 if(prev_predicted_name==name):
                     no_of_adjacent_prediction+=1
                 else:
@@ -158,6 +160,7 @@ while(True):
             flag_face_not_recognised=False
             tries+=1
             if(tries>=MAX_TRY):
+                speak("User authentication failed as face is not recognised")
                 flag=True       #to start from qrcode
                 tries=0
 
