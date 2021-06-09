@@ -9,3 +9,6 @@ Door lock system using Arduino and Python with 2 step authentication(Face Recogn
 * <b>[qr_face_recogntion.py](https://github.com/Amal4m41/QRcode-FaceRecognition-Door-Lock-system-Arduino-IOT/blob/master/qr_face_recogntion.py)</b> : main file that takes care of the 2 step authentication using QR code and face recognition, communication with Arduino(Open or Close the door), user interaction using text to speech etc.<br><br>
 * <b>The authentication process</b> : <br><br>
 ![](qr_face_detection_flowchart.png)
+
+* <b>Arduino connection diagram</b> : <br><br>
+![](https://github.com/Amal4m41/QRcode-FaceRecognition-Door-Lock-system-Arduino-IOT/blob/master/arduino_connection_simulation_diagram.png)
