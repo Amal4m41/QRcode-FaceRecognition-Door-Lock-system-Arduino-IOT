@@ -1,3 +1,5 @@
+#Script to train the model for face recognition
+
 import os,pickle,numpy as np
 from PIL import Image    #PIL is Python Image Library
 from cv2 import cv2

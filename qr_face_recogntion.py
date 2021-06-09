@@ -9,7 +9,7 @@ import serial  #for serial communication with arduino
 from secret_key import key,registered_users
 
 #Establish connection with arduino
-# arduino = serial.Serial(port='COM3', baudrate=9600, timeout=.1)
+arduino = serial.Serial(port='COM3', baudrate=9600)
 
 #Specify the recognizer
 face_cascade=cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_alt2.xml')
@@ -104,7 +104,7 @@ while(True):
             # roi_color=frame[y:y+h,x:x+w]
 
             id,confidence=recognizer.predict(roi_gray)
-            print(id,confidence,labels[id])
+            # print(id,confidence,labels[id])
             if(confidence>70  and (labels[id] in registered_users)):
                 print("PREDICTED : ",labels[id])
                 
@@ -144,12 +144,13 @@ while(True):
 
         if(flag_face_recognised):    #if face is recognized then open the door
             speak("Welcome "+name.replace('_',' ')+", unlocking door. The door will remain open for the next 5 seconds")
+            arduino.write(bytes('o', 'utf-8'))  #Output the given byte string over the serial port.
             print("DOOR is OPEN")
-            #arduino.write(bytes('o', 'utf-8'))  #Output the given byte string over the serial port.
+
             
             time.sleep(5)
             speak("Closing door")
-            #arduino.write(bytes('c', 'utf-8'))  #Output the given byte string over the serial port.
+            arduino.write(bytes('c', 'utf-8'))  #Output the given byte string over the serial port.
             print("DOOR is CLOSED")
             flag_face_recognised=False
             flag=True         #to start from qrcode
